@@ -14,6 +14,6 @@ numpy
 pandas
 matplotlib
 flask
-pickle
+pickle-mixin
 opencv-python
 matplotlib
