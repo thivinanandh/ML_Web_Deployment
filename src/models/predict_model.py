@@ -16,7 +16,7 @@ def image2numpy():
 
 def predict_model(modelNo,data,isImage):
     """ 
-    Predicts the number based on the Image
+    Predicts the number based on the Image 
     """
     if(modelNo == 1):
         ## load model 1
