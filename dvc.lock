@@ -1,0 +1,43 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python3 src/models/train_model.py
+    deps:
+    - path: src/models/train_model.py
+      md5: 036e80e8427e910bff698ed32751d880
+      size: 3150
+    outs:
+    - path: reports/metrics.json
+      md5: 11e0810794c5b1671fb7d604c6130577
+      size: 59
+    - path: reports/metrics.png
+      md5: fbe7501b8a70a3d62fff99b3f66fd0b8
+      size: 9407
+  predict:
+    cmd: python3 src/models/predict_model.py
+    deps:
+    - path: src/models/predict_model.py
+      md5: 6e022323b9e883f760e461b7b27497b9
+      size: 1483
+  prepare:
+    cmd: python3 src/data/make_dataset.py ./data/raw/ ./data/processed
+    deps:
+    - path: data/raw/mnist.npz
+      md5: 8a61469f7ea1b51cbae51d4f78837e45
+      size: 11490434
+    - path: src/data/make_dataset.py
+      md5: 5ac0c63c3fcdf88d34dbe4ecaa8d9917
+      size: 2345
+    outs:
+    - path: data/processed/x_test
+      md5: 5a7c604b96e33324fb6585d0669689a3
+      size: 7840164
+    - path: data/processed/x_train
+      md5: 367ccb91cdf9b7751d1ee69e18176d1b
+      size: 47040164
+    - path: data/processed/y_test
+      md5: b43bd9619865757631b22c2ea727cf6d
+      size: 10151
+    - path: data/processed/y_train
+      md5: 6473a55fec3fb7b18d755b7d5356a011
+      size: 60151

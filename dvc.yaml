@@ -1,0 +1,24 @@
+stages:
+  prepare:
+    cmd: python3 src/data/make_dataset.py ./data/raw/ ./data/processed
+    deps:
+    - data/raw/mnist.npz
+    - src/data/make_dataset.py
+    outs:
+    - data/processed/x_test
+    - data/processed/x_train
+    - data/processed/y_train
+    - data/processed/y_test
+  train:
+    cmd: python3 src/models/train_model.py
+    deps:
+    - src/models/train_model.py
+    outs:
+    - reports/metrics.png
+    metrics:
+    - reports/metrics.json:
+        cache: false
+  predict:
+    cmd: python3 src/models/predict_model.py
+    deps:
+    - src/models/predict_model.py
