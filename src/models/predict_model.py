@@ -3,7 +3,7 @@ from references.data_dictionary import ModelParameters
 import logging
 import tensorflow as tf
 import numpy as np
-import cv2
+# import cv2
 import numpy as np
 from PIL import Image
 
