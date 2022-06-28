@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, request
 from src.models.predict_model import *
 import os
-import cv2
+# import cv2
 import tensorflow as tf
 import base64
 import json
