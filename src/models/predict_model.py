@@ -5,16 +5,12 @@ import tensorflow as tf
 import numpy as np
 import cv2
 import numpy as np
+from PIL import Image
 
-def image2numpy():
-    img = cv2.imread('./data/processed/3.png')
-    gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    res = cv2.resize(gray_image, dsize=(28, 28))
-    # cv2.imwrite("1_post.png", gray_image)
-    # cv2.imwrite("1_post2.png", res)
-    return res;
 
-def predict_model(modelNo,data,isImage):
+
+
+def predict_model(modelNo,data):
     """ 
     Predicts the number based on the Image 
     """
@@ -25,18 +21,15 @@ def predict_model(modelNo,data,isImage):
     logger = logging.getLogger(__name__)
     logger.info('model Loaded.')
 
-    if(isImage==True):
-        predData =  image2numpy()
-    else:
-        predData = data
+    # im = Image.fromarray(data)
+    # im.save("1_post.png")
 
     ## predict data 
-    pred = Savedmodel.predict(predData.reshape((1,28,28)));
-    print(pred)
+    pred = Savedmodel.predict(data.reshape((1,28,28)));
     number = np.argmax(pred)
-
     logger.info(f'Predicted Value is {number}')
-    return number
+
+    return np.argmax(pred)
 
 
 if __name__ == '__main__':
@@ -50,5 +43,5 @@ if __name__ == '__main__':
         y_test = pickle.load(f)
     logger.info(f'Actual Value is {np.argmin(y_test)}')
     
-    predict_model(1,x_test[234],True);
+    # predict_model(1,x_test[234]);
     

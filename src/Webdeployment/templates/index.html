@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/docs/4.1/assets/img/favicons/favicon.ico">
+
+    <title>MNIST Predictor</title>
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="starter-template.css" rel="stylesheet">
+    
+   
+</head>
+
+<body >
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">MNIST Dataset Prediction</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="." id="HomeButton">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">Disabled</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+
+    <main role="main" class="container">
+
+        <div class="starter-template">
+            <h1>MNIST DATASET CLASSIFIER</h1>
+            <p class="lead"> Draw an image to identify the handwritten digit<br>
+        </div>
+
+    </main><!-- /.container -->
+    <div class="container-fluid  justify-content-center align-items-center" style="height:550px" >
+        <div class="row justify-content-center align-items-center" style="height: 550px;  padding: 20px;">
+            <div class="col-md-4" >
+                <div class="col">
+                        
+                <h1>Draw here for prediction..! <br/></h1>
+                <canvas id="myCanvas" width="400" height="400" style="background: #000; margin-left: 100px;">Your browser does not support the HTML5 canvas tag.</canvas>
+                
+            </div>
+                
+                <input type="button" value="Predict" id="saveBtn" size="30" onclick="save()" class="btn btn-success">
+                <input type="button" value="clear" id="clearBtn" size="23" onclick="clear()" class="btn">
+            </div>
+
+            <div class="col-md-4" style=" padding-top: 10px;">
+                <form class="form-horizontal" action="/submit" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class="control-label col-sm-6" for="pwd" style="min-width: 500px;"> <h1>[OR] Upload Your Image </h1></label>
+                        <div class="col-sm-6">
+                            <input type="file" class="form-control" placeholder="Hours Studied" name="my_image"
+                                id="pwd">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+            
+        </div>
+    </div>
+    {% if prediction %}
+    <br/>
+    <br/>
+    <br/>
+    <div class="container-fluid  justify-content-center align-items-center">
+        <div class="row justify-content-center align-items-center" style="background-color: rgb(69, 189, 253);">
+            <div class="col-md-4">
+
+                <img src="{{img_path}}" height="400px" width="400px">
+            </div>
+            <div class="col-md-4">
+                <h2> Your Prediction : <i> {{prediction}} </i></h2>
+                <button id="Reload" class="btn btn-success" onclick="location.href='.'">Predict Again</button>
+            </div>
+
+        </div>
+    </div>
+    {% endif %}
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <script>
+  
+        const c = document.getElementById("myCanvas");
+c.addEventListener("click", penTool); // fires after mouse left btn is released
+c.addEventListener("mousedown", setLastCoords); // fires before mouse left btn is released
+c.addEventListener("mousemove", freeForm);
+
+
+const ctx = c.getContext("2d");
+ctx.fillStyle = "black";
+ctx.fillRect(0, 0, c.width, c.height);
+
+function setLastCoords(e) {
+    const {x, y} = c.getBoundingClientRect();
+    lastX = e.clientX - x;
+    lastY = e.clientY - y;
+}
+
+function freeForm(e) {
+    if (e.buttons !== 1) return; // left button is not pushed yet
+    penTool(e);
+}
+
+document.getElementById("clearBtn").addEventListener("click", function(e) {
+    clear()
+});
+function clear(e){
+    console.log("COMES HERE")
+    ctx.clearRect(0, 0, c.width, c.height)
+}
+
+
+document.getElementById("saveBtn").addEventListener("click", function(e) {
+    save()
+});
+document.getElementById("HomeButton").addEventListener("click", function(e) {
+    document.location.href="/";
+});
+
+
+function save(e){
+    
+    // window.location = c.canvas.toDataURL('image/png');
+    var dataURL = c.toDataURL();
+
+    
+    // console.log(dataURL)
+    $.post("/submit_draw", { data : dataURL }).done(function(data){
+//    window.location.href="/submit_draw";
+document.open();
+document.write(data);
+document.close();
+
+   console.log(data)
+});
+
+    // $.ajax({
+    //     type: "POST",
+    //     url: "/submit_draw",
+    //     dataType: 'json',
+    //     data: { data : dataURL },
+    //     success: function(){
+    //         alert("true")
+    //         window.location.href = "/submit_draw";
+    //     }
+    // });
+
+    // $.ajax({
+    //     url: "/submit_draw",
+    //     type : "POST",
+    //     data: dataURL,
+    //     contentType:"application/json",
+    //     success: function(response) {
+    //         console.log("success!!!");
+    //         console.log(response);
+    //     },
+    //     error: function(error) {
+    //         console.log("failure!!!");
+    //         console.log(error);
+    //     }
+    // });
+
+    // document.location.href = "/submit_draw"
+    var image = new Image();
+        image.onload = function() {
+        ctx.drawImage(image, 0, 0);
+    };
+    image.src = dataURL;
+
+}
+
+function penTool(e) {
+    const {x, y} = c.getBoundingClientRect();
+    const newX = e.clientX - x;
+    const newY = e.clientY - y;
+    
+    ctx.beginPath();
+    ctx.lineWidth = 30;
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(newX, newY);
+    ctx.strokeStyle = 'white';
+    ctx.stroke();
+    ctx.closePath();
+    
+    lastX = newX;
+    lastY = newY;
+}
+
+
+
+
+
+let lastX = 0;
+let lastY = 0; 
+    </script>
+    <script src="jquery-3.3.1.slim.min.js"></script>
+    <!-- <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script> -->
+    <script src="popper.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+</body>
+
+</html>
