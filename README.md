@@ -33,6 +33,8 @@ The project uses the cookie cutter template (https://drivendata.github.io/cookie
 
 Clone the code to your local machine
 
+### Clone the Repo
+
 ```
 https://github.com/thivinanandh/ML_MINST_Deployment.git
 ```
@@ -57,6 +59,8 @@ to activate the virtual enviroinment.
 
 Now, run the local install of the existing code using `pip`
 
+### Initial Depedency Setup
+
 ```
 pip install -e .
 ```
@@ -65,6 +69,7 @@ This identifies all the submodules within the code and then will install all the
 
 Now, to run the flask server , run 
 
+### Deployment using flask
 
 ```
 python3 src/Webdeployment/app.py
